@@ -80,3 +80,54 @@ Using **R=15, L=300**:
 ## Notes / limitations
 - Public dataset: no true loan terms, EAD/LGD, or timestamps → economics and monitoring are demonstrated with simplified assumptions.
 - In production you would add time splits, vintage tracking, and periodic recalibration.
+
+
+## Project 2 — Lending Decisioning Sandbox (Amount / Term / Pricing / Fees → Expected NPV Profit)
+
+**Notebook:** `Lending_Decisioning_NPV_Sandbox.ipynb`
+
+### Goal
+Move from “predicting risk” to “optimizing lending decisions”: for each applicant, choose the best offer
+(**loan amount**, **term**, **APR**, **origination fee**) that maximizes **expected NPV profit** under risk/affordability constraints.
+
+This project adds a decisioning layer on top of PD: it selects the best offer (amount/term/APR/fee) to maximize expected NPV profit under risk constraints
+
+Economics are parameterized (LGD, cost of funds, origination & servicing cost, take-rate); all assumptions are editable at the top of the notebook for sensitivity analysis
+
+
+### Champion vs Challenger (Decisioning policy)
+
+| Policy | Offer rate | Booking rate | Exp. profit / applicant | Exp. bad rate (booked) | Exp. loss / applicant | Avg amount | Avg term | Avg APR | Avg fee |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Champion | 79.9% | 50.0% | 4.72 | 1.93% | 1.01 | 150.0 | 6.0 | 35.0% | 3.0% |
+| Challenger | 94.0% | 46.5% | -5.85e+16 | 4.53% | NaN | 247.5 | 11.9 | 45.0% | 5.0% |
+
+
+Champion vs Challenger: Profit vs Risk
+
+![Profit vs Risk](Champion vs Challenger Profit vs Risk.png)
+
+
+### Method
+1) Train an interpretable **PD model** on `cs-training.csv` (Logistic Regression) and **calibrate** probabilities (Platt scaling).  
+2) Define an offer grid (amount × term × APR × fee).  
+3) For each applicant, adjust PD for offer terms (amount/term/payment burden), model **take-rate**, and compute:
+   - `NPV_good` (all payments arrive)
+   - `NPV_bad` (payments until expected default month + recovery with LGD)
+   - `Expected Profit per applicant = take_rate * ((1-PD)*NPV_good + PD*NPV_bad)`
+4) Choose the profit-max offer (or reject if best profit ≤ 0), then compare **Champion vs Challenger**.
+
+### Key Outputs
+- **Champion vs Challenger** KPI table: offer rate, expected booking rate, expected bad rate, expected profit per applicant, EL proxy  
+- Plot: **Profit vs Risk** (Champion vs Challenger)  
+- Chosen average offer terms under the optimized policy (amount/term/APR/fee)
+
+### Assumptions (explicit)
+Because the public dataset has no real cashflows/recoveries:
+- LGD, cost of funds, origination and servicing costs are set as **tunable parameters**
+- take-rate is modeled as a simple function of APR/fee/risk
+- default timing is approximated via a PD-based heuristic
+
+All assumptions are centralized at the top of the notebook for sensitivity analysis.
+
+
