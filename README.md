@@ -105,8 +105,8 @@ Economics are parameterized (LGD, cost of funds, origination & servicing cost, t
 
 Champion vs Challenger: Profit vs Risk
 
-![Profit vs Risk](Champion vs Challenger Profit vs Risk.png)
 
+<img width="565" height="455" alt="Champion vs Challenger Profit vs Risk" src="https://github.com/user-attachments/assets/54f7fed6-4b83-45a4-97ca-914c706a1ead" />
 
 ### Method
 1) Train an interpretable **PD model** on `cs-training.csv` (Logistic Regression) and **calibrate** probabilities (Platt scaling).  
