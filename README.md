@@ -1,4 +1,4 @@
-# Credit Risk Case — Give Me Some Credit (Logistic Regression)
+# Credit Risk Case - Give Me Some Credit (Logistic Regression)
 
 ## Executive summary (what a risk / product lead cares about)
 - Built an interpretable **PD (probability‑of‑default)** model (logistic regression baseline) with **train‑only** preprocessing and **probability calibration**.
@@ -82,7 +82,7 @@ Using **R=15, L=300**:
 - In production you would add time splits, vintage tracking, and periodic recalibration.
 
 
-## Project 2 — Lending Decisioning Sandbox (Amount / Term / Pricing / Fees → Expected NPV Profit)
+## Project 2 - Lending Decisioning Sandbox (Amount / Term / Pricing / Fees → Expected NPV Profit)
 
 **Notebook:** `Lending_Decisioning_NPV_Sandbox.ipynb`
 
